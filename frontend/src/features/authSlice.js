@@ -7,16 +7,12 @@ import {
   updatePassword,
   updatePhoneNumber,
   updateProfile,
+  sendEmailVerification,
+  reauthenticateWithCredential,
 } from "firebase/auth";
 
 import axios from "axios";
 import { auth } from "../firebase";
-
-const initialState = {
-  currentUser: null,
-  status: "idle",
-  error: null,
-};
 
 export const registerUser = createAsyncThunk(
   "auth/register",
@@ -28,12 +24,12 @@ export const registerUser = createAsyncThunk(
         credentials.email,
         credentials.password
       );
-
+      sendEmailVerification(userCredential.user);
       await updateProfile(userCredential.user, credentials);
       return userCredential.user;
     } catch (e) {
       console.log(e.message);
-      dispatch(reset());
+
       throw e.message;
     }
   }
@@ -51,7 +47,6 @@ export const loginUser = createAsyncThunk("auth/login", async (credentials) => {
     return userCredential.user;
   } catch (e) {
     console.log(e.message);
-    dispatch(reset());
     throw e.message;
   }
 });
@@ -74,15 +69,24 @@ export const updateUser = createAsyncThunk(
       }
 
       if (credentials.password != "") {
+        // await reauthenticateWithCredential(user, {
+        //   email: credentials.email,
+        //   password: credentials.oldPassword,
+        // });
         await updatePassword(user, credentials.password);
       }
     } catch (e) {
       console.log(e.message);
-      dispatch(reset);
       throw e.message;
     }
   }
 );
+
+const initialState = {
+  currentUser: null,
+  status: "idle",
+  error: null,
+};
 
 export const authSlice = createSlice({
   name: "auth",
@@ -130,7 +134,8 @@ export const authSlice = createSlice({
       })
       .addCase(updateUser.rejected, (state, action) => {
         state.status = "failed";
-        state.error = "Profile Update Failed!";
+        state.error =
+          "Profile Update Failed, make sure your email is verified!";
       });
   },
 });

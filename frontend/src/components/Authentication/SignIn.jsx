@@ -1,4 +1,4 @@
-// TODO remove, this demo shouldn't need to reset the theme.
+// MUI
 import * as React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -14,30 +14,65 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import PersonIcon from "@mui/icons-material/Person";
 import Typography from "@mui/material/Typography";
 import { Alert } from "@mui/material";
-
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
-import { registerUser, loginUser } from "../../features/authSlice";
+//React-Router-Dom
+import { useNavigate } from "react-router-dom";
+
+// ReduxToolkit
+import { registerUser, loginUser, reset } from "../../features/authSlice";
 import { useSelector, useDispatch } from "react-redux";
 
-import { useRef } from "react";
+// React
+import { useRef, useState, useEffect } from "react";
 
 export default function SignIn() {
+  // Refs
   const emailRef = useRef("");
   const passwordRef = useRef("");
 
+  // States
+  const [emailError, setEmailError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
+
+  // Redux
   const dispatch = useDispatch();
 
+  // Router
+  const navigate = useNavigate();
+
+  // SUbmitting form
   const handleSubmit = (event) => {
     event.preventDefault();
-    if ((emailRef.current.value != "") & (passwordRef.current.value != ""))
+    if (validationCheck()) {
       dispatch(
         loginUser({
           email: emailRef.current.value,
           password: passwordRef.current.value,
         })
       );
-    else alert("Please write email and password");
+
+      
+    }
+  };
+
+  // Performing validation checks on fields
+  const validationCheck = () => {
+    setEmailError(false);
+    setPasswordError(false);
+
+    var check = true;
+
+    if (/\S+@\S+\.\S+/.test(emailRef.current.value) == false) {
+      setEmailError(true);
+      check = false;
+    }
+    if (passwordRef.current.value.length < 6) {
+      setPasswordError(true);
+      check = false;
+    }
+
+    return check;
   };
 
   return (
@@ -59,6 +94,8 @@ export default function SignIn() {
           autoComplete="email"
           autoFocus
           inputRef={emailRef}
+          error={emailError}
+          helperText={emailError ? "Please enter a valid email" : ""}
         />
         <TextField
           margin="normal"
@@ -70,6 +107,9 @@ export default function SignIn() {
           id="password"
           autoComplete="current-password"
           inputRef={passwordRef}
+          inputProps={{ maxLength: 20 }}
+          helperText="Password must be atleast 6 characters."
+          error={passwordError}
         />
         <FormControlLabel
           control={<Checkbox value="remember" color="primary" />}
@@ -86,7 +126,7 @@ export default function SignIn() {
         </Button>
         <Grid container>
           <Grid item>
-            <Link href="/" variant="body2">
+            <Link href="/signup" variant="body2">
               {"Don't have an account? Sign Up"}
             </Link>
           </Grid>

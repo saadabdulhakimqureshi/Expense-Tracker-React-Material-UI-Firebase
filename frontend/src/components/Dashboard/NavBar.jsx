@@ -59,7 +59,7 @@ export default function NavBar() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap>
-            Expense-App
+            Expense Tracker
           </Typography>
           <div style={{ flexGrow: 1 }}></div>
 

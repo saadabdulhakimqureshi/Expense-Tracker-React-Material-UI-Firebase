@@ -53,7 +53,20 @@ export default function Authentication() {
               backgroundSize: "cover",
               backgroundPosition: "center",
             }}
-          />
+          >
+            <h1
+              style={{
+                position: "absolute", // Position the heading absolutely within the grid
+                bottom: 0, // Align it to the bottom
+                left: 0, // Align it to the left
+                padding: "16px", // Add some padding for spacing
+                color: "#fff", // Text color
+                background: "rgba(0, 0, 0, 0.5)", // Background color with transparency
+              }}
+            >
+              Expense Tracker
+            </h1>
+          </Grid>
           <Grid
             item
             xs={12}
@@ -73,9 +86,9 @@ export default function Authentication() {
               }}
             >
               {status === "failed" ? (
-                <Alert severity="error">
-                  {error}
-                </Alert>
+                <Alert severity="error">{error}</Alert>
+              ) : status === "succeded" ? (
+                <Alert severity="success">Successful!</Alert>
               ) : (
                 <></>
               )}
@@ -83,7 +96,7 @@ export default function Authentication() {
                 <CircularProgress />
               ) : (
                 <Routes>
-                  <Route path="/" element={<SignUp />} />
+                  <Route path="/signup" element={<SignUp />} />
                   <Route path="/login" element={<SignIn />} />
                   <Route path="*" element={<SignIn />} />
                 </Routes>

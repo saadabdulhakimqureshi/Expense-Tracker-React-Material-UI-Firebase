@@ -1,11 +1,14 @@
 import React from "react";
 
 import NavBar from "./NavBar";
-import Profile from "./Profile";
+import Profile from "../Authentication/Profile";
 import Expenses from "./Expenses";
+
 import { Routes, Route } from "react-router-dom";
 
 export default function Dashboard() {
+
+  
   return (
     <>
       <NavBar />
