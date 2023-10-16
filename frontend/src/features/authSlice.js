@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk, current } from "@reduxjs/toolkit";
+
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -9,6 +10,7 @@ import {
   updateProfile,
   sendEmailVerification,
   reauthenticateWithCredential,
+  EmailAuthProvider,
 } from "firebase/auth";
 
 import axios from "axios";
@@ -69,10 +71,13 @@ export const updateUser = createAsyncThunk(
       }
 
       if (credentials.password != "") {
-        // await reauthenticateWithCredential(user, {
-        //   email: credentials.email,
-        //   password: credentials.oldPassword,
-        // });
+        await reauthenticateWithCredential(
+          user,
+          EmailAuthProvider.credential(
+            credentials.email,
+            credentials.oldPassword
+          )
+        );
         await updatePassword(user, credentials.password);
       }
     } catch (e) {
@@ -124,7 +129,7 @@ export const authSlice = createSlice({
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.status = "failed";
-        state.error = "Authentication Failed!";
+        state.error = "Authentication Failed, Check Your Email and Password!";
       })
       .addCase(updateUser.pending, (state, action) => {
         state.status = "loading";

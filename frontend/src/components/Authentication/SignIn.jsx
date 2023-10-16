@@ -77,7 +77,7 @@ export default function SignIn() {
 
   return (
     <>
-      <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+      <Avatar sx={{ m: 1, bgcolor: "e0e0e0" }}>
         <LockOutlinedIcon />
       </Avatar>
       <Typography component="h1" variant="h5">

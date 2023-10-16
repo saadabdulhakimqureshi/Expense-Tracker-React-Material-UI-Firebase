@@ -11,7 +11,14 @@ import {
   Toolbar,
   Typography,
   IconButton,
+  Stack,
 } from "@mui/material";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import PersonIcon from "@mui/icons-material/Person";
+import MenuIcon from "@mui/icons-material/Menu";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+
+// React-Router-Dom
 import {
   BrowserRouter as Router,
   Route,
@@ -19,25 +26,25 @@ import {
   useNavigate,
 } from "react-router-dom";
 
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import PersonIcon from "@mui/icons-material/Person";
-import MenuIcon from "@mui/icons-material/Menu";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-
+// Reduxtoolkit
 import { logout } from "../../features/authSlice";
 import { useSelector, useDispatch } from "react-redux";
 
 const defaultTheme = createTheme();
 
 export default function NavBar() {
+  // States
   const [open, setOpen] = useState(false);
-  const navigate = useNavigate();
-
   const toggleDrawer = () => {
     setOpen(!open);
   };
 
+  // Router
+  const navigate = useNavigate();
+
+  // Redux
   const dispatch = useDispatch();
+  const currentUser = useSelector((state) => state.auth.currentUser);
 
   function handleSignOut() {
     dispatch(logout());
@@ -62,10 +69,16 @@ export default function NavBar() {
             Expense Tracker
           </Typography>
           <div style={{ flexGrow: 1 }}></div>
-
-          <Button variant="contained" color="secondary" onClick={handleSignOut}>
-            Sign Out
-          </Button>
+          <Stack direction={"row"} spacing={2}>
+            <Typography variant="h5">{currentUser.displayName}</Typography>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={handleSignOut}
+            >
+              Sign Out
+            </Button>
+          </Stack>
         </Toolbar>
       </AppBar>
       <Drawer open={open} onClose={toggleDrawer}>

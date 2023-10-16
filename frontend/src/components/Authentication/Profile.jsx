@@ -6,6 +6,7 @@ import {
   Alert,
   CircularProgress,
   Stack,
+  InputAdornment,
   ButtonGroup,
 } from "@mui/material";
 
@@ -64,6 +65,7 @@ export default function Profile() {
 
   // Submit
   const handleSubmit = () => {
+    console.log(validationCheck());
     if (validationCheck()) {
       dispatch(
         updateUser({
@@ -82,9 +84,15 @@ export default function Profile() {
     dispatch(reset());
   }, []);
 
+  useEffect(() => {
+    if (status == "succeded")
+      setTimeout(() => {
+        dispatch(reset());
+      }, 3000);
+  }, [status]);
+
   const validationCheck = () => {
     setNameError(false);
-    setEmailError(false);
     setPasswordError(false);
     var check = true;
 
@@ -105,16 +113,11 @@ export default function Profile() {
         check = false;
       }
     }
-    if (emailRef.current.value != "") {
-      if (/\S+@\S+\.\S+/.test(emailRef.current.value) == false) {
-        setEmailError(true);
-        check = false;
-      }
-      if (emailRef.current.value === currentUser.email) {
-        check = false;
-      }
-    }
+
     if (passwordRef.current.value != "") {
+      if (oldPasswordRef.current.value.length < 6) {
+        check = false;
+      }
       if (passwordRef.current.value.length < 6) {
         setPasswordError(true);
         check = false;
@@ -124,51 +127,46 @@ export default function Profile() {
   };
 
   return (
-    <ThemeProvider theme={defaultTheme}>
-      <Grid container component="main" sx={{ height: "100vh" }}>
-        <CssBaseline />
-        <Grid>
-          <Box
-            sx={{
-              my: 8,
-              mx: 4,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-              <PersonIcon />
-            </Avatar>
-            <Typography component="h1" variant="h5">
-              Profile
-            </Typography>
-            {status === "failed" ? (
-              <Alert severity="error">{error}</Alert>
-            ) : status === "succeded" ? (
-              <Alert severity="success">{"Profile Updated!"}</Alert>
-            ) : (
-              <></>
-            )}
+    <Box
+      sx={{
+        backgroundColor: "white",
+        border: 1,
+        padding: 10,
+        alignItems: "center",
+        flexDirection: "column",
+        display: "flex",
+        my: "15vh",
+        mx: "5vw",
+      }}
+    >
+      <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+        <PersonIcon />
+      </Avatar>
+      <Typography component="h1" variant="h5">
+        Profile
+      </Typography>
 
-            <Box component="form" noValidate onSubmit={handleSubmit}>
-              {status === "loading" ? (
-                <CircularProgress />
-              ) : (
-                <>
-                  <TextField
-                    margin="normal"
-                    id="email"
-                    label={currentUser.email}
-                    name="email"
-                    tyoe="email"
-                    helperText={edit ? "Email cannot be changed" : ""}
-                    autoComplete="email"
-                    autoFocus
-                    disabled
-                    fullWidth
-                  />
-                  {/* {edit ? (
+      <>
+        <TextField
+          margin="normal"
+          id="email"
+          label="Current Email"
+          name="email"
+          tyoe="email"
+          helperText={edit ? "Email cannot be changed" : ""}
+          autoComplete="email"
+          autoFocus
+          disabled
+          fullWidth
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                {currentUser.email}
+              </InputAdornment>
+            ),
+          }}
+        />
+        {/* {edit ? (
                     <TextField
                       margin="normal"
                       id="email"
@@ -188,104 +186,135 @@ export default function Profile() {
                   ) : (
                     <></>
                   )} */}
-                  <TextField
-                    margin="normal"
-                    id="name"
-                    label={currentUser.displayName}
-                    name="name"
-                    fullWidth
-                    disabled
-                  />
-                  {edit ? (
-                    <TextField
-                      margin="normal"
-                      id="name"
-                      label="New Name"
-                      name="name"
-                      fullWidth
-                      inputRef={nameRef}
-                      error={nameError}
-                      helperText={
-                        nameError
-                          ? "Please enter a name of atleast 2 characters."
-                          : "Name cannot be same as current."
-                      }
-                    />
-                  ) : (
-                    <></>
-                  )}
+        <TextField
+          margin="normal"
+          id="name"
+          label="Current Name"
+          name="name"
+          fullWidth
+          disabled
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                {currentUser.displayName}
+              </InputAdornment>
+            ),
+          }}
+        />
+        {edit ? (
+          <TextField
+            margin="normal"
+            id="name"
+            label="New Name"
+            name="name"
+            fullWidth
+            inputRef={nameRef}
+            error={nameError}
+            helperText={
+              nameError
+                ? "Please enter a name of atleast 2 characters."
+                : "Name cannot be same as current."
+            }
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start"></InputAdornment>
+              ),
+            }}
+          />
+        ) : (
+          <></>
+        )}
 
-                  <TextField
-                    margin="normal"
-                    name="password"
-                    label="**********"
-                    type="password"
-                    id="password"
-                    fullWidth
-                    disabled
-                  />
-                  {edit ? (
-                    <>
-                      <TextField
-                        margin="normal"
-                        name="password"
-                        label="Old Password"
-                        type="password"
-                        id="password"
-                        fullWidth
-                        inputRef={oldPasswordRef}
-                        helperText="Please write your old password before changing."
-                      />
-                      <TextField
-                        margin="normal"
-                        name="password"
-                        label="New Password"
-                        type="password"
-                        id="password"
-                        fullWidth
-                        inputRef={passwordRef}
-                        helperText="Password must be atleast 6 characters."
-                        error={passwordError}
-                      />
-                    </>
-                  ) : (
-                    <></>
-                  )}
-                  {edit ? (
-                    <Stack direction={"row"}>
-                      <ButtonGroup orientation="horizontal">
-                        <Button
-                          variant="contained"
-                          sx={{ mt: 3, mb: 2 }}
-                          onClick={handleSubmit}
-                        >
-                          Update
-                        </Button>
-                        <Button
-                          variant="contained"
-                          sx={{ mt: 3, mb: 2 }}
-                          onClick={toggleEdit}
-                        >
-                          Cancel
-                        </Button>
-                      </ButtonGroup>
-                    </Stack>
-                  ) : (
-                    <Button
-                      variant="contained"
-                      sx={{ mt: 3, mb: 2 }}
-                      endIcon={<EditIcon />}
-                      onClick={toggleEdit}
-                    >
-                      Edit Profile
-                    </Button>
-                  )}
-                </>
-              )}
-            </Box>
-          </Box>
-        </Grid>
-      </Grid>
-    </ThemeProvider>
+        <TextField
+          margin="normal"
+          name="password"
+          label="Current Password"
+          type="password"
+          id="password"
+          fullWidth
+          disabled
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">********</InputAdornment>
+            ),
+          }}
+        />
+        {edit ? (
+          <>
+            <TextField
+              margin="normal"
+              name="password"
+              label="Old Password"
+              type="password"
+              id="password"
+              fullWidth
+              inputRef={oldPasswordRef}
+              helperText="Please write your old password before changing."
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start"></InputAdornment>
+                ),
+              }}
+            />
+            <TextField
+              margin="normal"
+              name="password"
+              label="New Password"
+              type="password"
+              id="password"
+              fullWidth
+              inputRef={passwordRef}
+              helperText="Password must be atleast 6 characters."
+              error={passwordError}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start"></InputAdornment>
+                ),
+              }}
+            />
+          </>
+        ) : (
+          <></>
+        )}
+        <Stack direction={"row"}>
+          {status === "loading" ? (
+            <CircularProgress />
+          ) : edit ? (
+            <ButtonGroup orientation="horizontal">
+              <Button
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+                onClick={handleSubmit}
+              >
+                Update
+              </Button>
+              <Button
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+                onClick={toggleEdit}
+              >
+                Cancel
+              </Button>
+            </ButtonGroup>
+          ) : (
+            <Button
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+              endIcon={<EditIcon />}
+              onClick={toggleEdit}
+            >
+              Edit Profile
+            </Button>
+          )}
+        </Stack>
+        {status === "failed" ? (
+          <Alert severity="error">{error}</Alert>
+        ) : status === "succeded" ? (
+          <Alert severity="success">{"Profile Updated!"}</Alert>
+        ) : (
+          <></>
+        )}
+      </>
+    </Box>
   );
 }
