@@ -17,7 +17,11 @@ a user-friendly interface for users to record, categorize, and analyze their exp
 ## Demo
 
 ![Sign In](./images/sign-in.png)
-![Sign Out](./images/sign-out.png)
+![Sign Up](./images/sign-up.png)
+![Month Summary](./images/month-summary.png)
+![Income Summary](./images/income-summary.png)
+![Table](./images/table.png)
+![Forms](./images/forms.png)
 
 ## Features
 
