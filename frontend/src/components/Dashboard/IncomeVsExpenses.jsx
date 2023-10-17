@@ -10,11 +10,13 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  CircularProgress,
   Container,
   Stack,
   InputAdornment,
   Grid, // Import Grid component from Material-UI
 } from "@mui/material";
+
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -118,55 +120,65 @@ export default function IncomeVsExpenses() {
   }, [getExpensesStatus]);
 
   return (
-    <Container>
-      <Typography variant="h5">Income vs Expenses</Typography>
-      <Grid container spacing={3}>
-        <Grid item xs={12} sm={6}>
-          <LineChart
-            xAxis={[
-              {
-                data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-                label: "Month", // Add this line for the x-axis label
-              },
-            ]}
-            series={[
-              {
-                data: incomesState,
-                label: "Income", // Add this line for the y-axis label
-              },
-              {
-                data: expensesMonth,
-                label: "Total Expenses", // Add this line for the y-axis label
-              },
-            ]}
-            width={500}
-            height={300}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TableContainer>
-            <Table size="small" aria-labelledby="tableTitle">
-              <TableHead>
-                <TableRow>
-                  <TableCell align="left">Month</TableCell>
-                  <TableCell align="left">Income</TableCell>
-                  <TableCell align="left">Total Expense</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {months.map((month, index) => {
-                  // var status = getStatus(
-                  //   categoryTotals[budget.category]
-                  //     ? categoryTotals[budget.category]
-                  //     : 0,
-                  //   budget.budget
-                  // );
-                  return (
+    <>
+      {getStatus == "loading" ? (
+        <CircularProgress></CircularProgress>
+      ) : (
+        <Container>
+          <Typography variant="h5">
+            {new Date().getFullYear()} Income vs Expenses
+          </Typography>
+          <Grid container spacing={6}>
+            <Grid item xs={12} sm={6}>
+              <LineChart
+                xAxis={[
+                  {
+                    data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                    label: "Month", // Add this line for the x-axis label
+                  },
+                ]}
+                series={[
+                  {
+                    data: incomesState,
+                    label: "Income", // Add this line for the y-axis label
+                  },
+                  {
+                    data: expensesMonth,
+                    label: "Total Expenses", // Add this line for the y-axis label
+                  },
+                ]}
+                width={500}
+                height={300}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TableContainer>
+                <Table size="small" aria-labelledby="tableTitle">
+                  <TableHead>
                     <TableRow>
-                      <TableCell align="left">{month}</TableCell>
-                      <TableCell align="left">{incomesState[index]}</TableCell>
-                      <TableCell align="left">{expensesMonth[index]}</TableCell>
-                      {/* <TableCell align="left">
+                      <TableCell align="left">Month</TableCell>
+                      <TableCell align="left">Income</TableCell>
+                      <TableCell align="left">Total Expense</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {months.map((month, index) => {
+                      // var status = getStatus(
+                      //   categoryTotals[budget.category]
+                      //     ? categoryTotals[budget.category]
+                      //     : 0,
+                      //   budget.budget
+                      // );
+                      return (
+                        <TableRow>
+                          <TableCell align="left">{month}</TableCell>
+                          <TableCell align="left">
+                            {incomesState[index]}
+                          </TableCell>
+                          <TableCell align="left">
+                            {expensesMonth[index]}
+                          </TableCell>
+                          {/* <TableCell align="left">
                         {status == "success" ? (
                           <Alert severity={"success"}>Budget is safe.</Alert>
                         ) : status == "warning" ? (
@@ -179,14 +191,16 @@ export default function IncomeVsExpenses() {
                           </Alert>
                         )}
                       </TableCell> */}
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Grid>
-      </Grid>
-    </Container>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Grid>
+          </Grid>
+        </Container>
+      )}
+    </>
   );
 }

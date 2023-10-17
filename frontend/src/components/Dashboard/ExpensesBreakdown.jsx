@@ -14,6 +14,7 @@ import {
   Container,
   Stack,
   InputAdornment,
+  CircularProgress,
 } from "@mui/material";
 
 // Redux Tool Kit
@@ -46,7 +47,11 @@ export default function ExpensesBreakdown() {
     const data = [];
     var index = 0;
     for (var key in updatedBreakdown) {
-      data.push({ id: index, value: updatedBreakdown[key], label: key });
+      data.push({
+        id: index,
+        value: Math.round((updatedBreakdown[key] / expenses.length) * 100),
+        label: key,
+      });
       index += 1;
     }
 

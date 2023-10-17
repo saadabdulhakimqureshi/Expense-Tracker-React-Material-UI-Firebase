@@ -49,7 +49,7 @@ export default function SetMonthlyForm() {
       dispatch(
         updateincome({
           income: income.current.value,
-          month: incomeMonth.current.value,
+          month: incomeMonth.current.value-1,
           year: new Date().getFullYear(),
           uid: user.uid,
         })

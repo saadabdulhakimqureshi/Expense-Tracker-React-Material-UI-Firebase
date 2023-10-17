@@ -28,6 +28,10 @@ import {
 
 // Reduxtoolkit
 import { logout } from "../../features/authSlice";
+import { reset } from "../../features/authSlice";
+import { reset as resetExpenses } from "../../features/expensesSlice";
+import { reset as resetIncome } from "../../features/incomeSlice";
+import { reset as resetBudget } from "../../features/budgetSlice";
 import { useSelector, useDispatch } from "react-redux";
 
 const defaultTheme = createTheme();
@@ -48,6 +52,10 @@ export default function NavBar() {
 
   function handleSignOut() {
     dispatch(logout());
+    dispatch(reset());
+    dispatch(resetBudget());
+    dispatch(resetExpenses());
+    dispatch(resetIncome());
     navigate("/");
   }
 

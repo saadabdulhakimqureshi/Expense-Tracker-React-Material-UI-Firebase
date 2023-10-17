@@ -12,6 +12,7 @@ import {
   Container,
   Stack,
   InputAdornment,
+  CircularProgress,
 } from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -87,48 +88,54 @@ export default function CategoryBudgetsAndTotal() {
     <>
       <TableContainer>
         <Table size="small" aria-labelledby="tableTitle">
-          <TableHead>
-            <TableRow>
-              <TableCell align="left">Category</TableCell>
-              <TableCell align="left">Month's Budget</TableCell>
-              <TableCell align="left">Month's Expense</TableCell>
-              <TableCell align="left">Month's Status</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {budgets.map((budget) => {
-              var status = getStatus(
-                categoryTotals[budget.category]
-                  ? categoryTotals[budget.category]
-                  : 0,
-                budget.budget
-              );
-              return (
-                <TableRow key={budget.category}>
-                  <TableCell align="left">{budget.category}</TableCell>
-                  <TableCell align="left">{budget.budget}</TableCell>
-                  <TableCell align="left">
-                    {categoryTotals[budget.category]
-                      ? categoryTotals[budget.category]
-                      : 0}
-                  </TableCell>
-                  <TableCell align="left">
-                    {status == "success" ? (
-                      <Alert severity={"success"}>Budget is safe.</Alert>
-                    ) : status == "warning" ? (
-                      <Alert severity={"warning"}>
-                        Budget is close to being exceeded!
-                      </Alert>
-                    ) : (
-                      <Alert severity={"error"}>
-                        Budget has been exceeded!
-                      </Alert>
-                    )}
-                  </TableCell>
+          {getExpensesStatus == "loading" ? (
+            <CircularProgress></CircularProgress>
+          ) : (
+            <>
+              <TableHead>
+                <TableRow>
+                  <TableCell align="left">Category</TableCell>
+                  <TableCell align="left">Month's Budget</TableCell>
+                  <TableCell align="left">Month's Expense</TableCell>
+                  <TableCell align="left">Month's Status</TableCell>
                 </TableRow>
-              );
-            })}
-          </TableBody>
+              </TableHead>
+              <TableBody>
+                {budgets.map((budget) => {
+                  var status = getStatus(
+                    categoryTotals[budget.category]
+                      ? categoryTotals[budget.category]
+                      : 0,
+                    budget.budget
+                  );
+                  return (
+                    <TableRow key={budget.category}>
+                      <TableCell align="left">{budget.category}</TableCell>
+                      <TableCell align="left">{budget.budget}</TableCell>
+                      <TableCell align="left">
+                        {categoryTotals[budget.category]
+                          ? categoryTotals[budget.category]
+                          : 0}
+                      </TableCell>
+                      <TableCell align="left">
+                        {status == "success" ? (
+                          <Alert severity={"success"}>Budget is safe.</Alert>
+                        ) : status == "warning" ? (
+                          <Alert severity={"warning"}>
+                            Budget is close to being exceeded!
+                          </Alert>
+                        ) : (
+                          <Alert severity={"error"}>
+                            Budget has been exceeded!
+                          </Alert>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </>
+          )}
         </Table>
       </TableContainer>
     </>
