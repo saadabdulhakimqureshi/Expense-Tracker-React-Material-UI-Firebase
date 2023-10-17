@@ -2,14 +2,20 @@ import * as React from "react";
 import PropTypes from "prop-types";
 
 import {
-  CircularProgress,
-  Alert,
+  Checkbox,
+  FormControlLabel,
   TextField,
   InputAdornment,
+  CircularProgress,
+  MenuItem,
+  Button,
+  Stack,
+  Grid, // Import Grid component from Material-UI
 } from "@mui/material";
 import { alpha } from "@mui/material/styles";
-import { Stack, MenuItem, Button } from "@mui/material";
 
+import UpdateIcon from "@mui/icons-material/Update";
+import EditIcon from "@mui/icons-material/Edit";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -22,10 +28,8 @@ import TableSortLabel from "@mui/material/TableSortLabel";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
-import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import { FormGroup } from "@mui/material";
 import Switch from "@mui/material/Switch";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -120,7 +124,7 @@ export default function EnhancedTable() {
 
   const handleEditClick = (expenseId) => {
     // Toggle the edit state for a specific expenseId
-    console.log(edit);
+
     setEdit((prevEdit) => ({
       ...prevEdit,
       [expenseId]: prevEdit[expenseId] ? !prevEdit[expenseId] : true,
@@ -185,13 +189,13 @@ export default function EnhancedTable() {
   React.useEffect(() => {
     if (addStatus == "succeded") {
       dispatch(getExpenses(currentUser.uid));
-      filter();
     }
   }, [addStatus]);
 
   const filter = () => {
     dispatch(dispatch(setStartDate(startDateState)));
     dispatch(dispatch(setEndDate(endDateState)));
+
     var filters = [];
     if (entertainmentCheck) {
       filters.push("Entertainment");
@@ -221,111 +225,105 @@ export default function EnhancedTable() {
 
       <Paper sx={{ width: "100%", mb: 2 }}>
         {/* <EnhancedTableToolbar numSelected={selected.length} /> */}
-        <Stack direction={"row"}>
-          <FormControlLabel
-            control={<Checkbox />}
-            checked={entertainmentCheck}
-            label="Entertainment"
-            onChange={() => {
-              setEntertainmentCheck(!entertainmentCheck);
-              //filter();
-            }}
-          />
-          <FormControlLabel
-            control={<Checkbox />}
-            checked={transportCheck}
-            label="Transportation"
-            onChange={() => {
-              setTransportCheck(!transportCheck);
-              //filter();
-            }}
-          />
-          <FormControlLabel
-            control={<Checkbox />}
-            checked={utilitiesCheck}
-            label="Utilities"
-            onChange={() => {
-              setUtilitiesCheck(!utilitiesCheck);
-              //filter();
-            }}
-          />
-          <FormControlLabel
-            control={<Checkbox />}
-            checked={foodCheck}
-            label="Food"
-            onChange={() => {
-              setFoodCheck(!foodCheck);
-              //filter();
-            }}
-          />
-          <FormControlLabel
-            control={<Checkbox />}
-            checked={otherCheck}
-            label="Other"
-            onChange={() => {
-              setOtherCheck(!otherCheck);
-              //filter();
-            }}
-          />{" "}
-          <TextField
-            name="date"
-            type="date"
-            label="From"
-            required
-            value={startDateState}
-            onChange={(e) => setStartDateState(e.target.value)}
-            inputProps={{
-              max: endDateState, // Set the maximum allowed date
-            }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start"></InputAdornment>
-              ),
-            }}
-            sx={{ mt: 1 }}
-          />
-          <TextField
-            name="date"
-            type="date"
-            label="To"
-            required
-            value={endDateState}
-            inputProps={{
-              max: new Date().toISOString().split("T")[0], // Set the maximum allowed date
-            }}
-            onChange={(e) => setEndDateState(e.target.value)}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start"></InputAdornment>
-              ),
-            }}
-            sx={{ mt: 1, ml: 2 }}
-          />
-        </Stack>
-        <Stack direction={"row"}></Stack>
-        <Box
-          sx={{ mt: -5, mr: 5, display: "flex", justifyContent: "flex-end" }}
-        >
-          {status == "loading" ? (
-            <Box sx={{ ml: 10, mt: 1 }}>
-              <CircularProgress size={"2rem"} />
-            </Box>
-          ) : (
-            <Button
-              variant="contained"
-              sx={{ width: 150, mt: 1, ml: 2 }}
-              onClick={filter}
-            >
-              Filter
-            </Button>
-          )}
-        </Box>
+        <Grid container spacing={2} alignItems="center">
+          <Grid item>
+            <FormControlLabel
+              control={<Checkbox />}
+              checked={foodCheck}
+              label="Food"
+              onChange={() => setFoodCheck(!foodCheck)}
+            />
+          </Grid>
+          <Grid item>
+            <FormControlLabel
+              control={<Checkbox />}
+              checked={transportCheck}
+              label="Transportation"
+              onChange={() => setTransportCheck(!transportCheck)}
+            />
+          </Grid>
+          <Grid item>
+            <FormControlLabel
+              control={<Checkbox />}
+              checked={utilitiesCheck}
+              label="Utilities"
+              onChange={() => setUtilitiesCheck(!utilitiesCheck)}
+            />
+          </Grid>
+          <Grid item>
+            <FormControlLabel
+              control={<Checkbox />}
+              checked={entertainmentCheck}
+              label="Entertainment"
+              onChange={() => setEntertainmentCheck(!entertainmentCheck)}
+            />
+          </Grid>
+          <Grid item>
+            <FormControlLabel
+              control={<Checkbox />}
+              checked={otherCheck}
+              label="Other"
+              onChange={() => setOtherCheck(!otherCheck)}
+            />
+          </Grid>
+          <Grid item>
+            <TextField
+              name="date"
+              type="date"
+              label="From"
+              required
+              value={startDateState}
+              onChange={(e) => setStartDateState(e.target.value)}
+              inputProps={{
+                max: endDateState, // Set the maximum allowed date
+              }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start"></InputAdornment>
+                ),
+              }}
+            />
+          </Grid>
+          <Grid item>
+            <TextField
+              name="date"
+              type="date"
+              label="To"
+              required
+              value={endDateState}
+              inputProps={{
+                max: new Date().toISOString().split("T")[0], // Set the maximum allowed date
+              }}
+              onChange={(e) => setEndDateState(e.target.value)}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start"></InputAdornment>
+                ),
+              }}
+            />
+          </Grid>
+          <Grid item>
+            {status === "loading" ? (
+              <Box sx={{ ml: 10, mt: 1 }}>
+                <CircularProgress size={"2rem"} />
+              </Box>
+            ) : (
+              <Button
+                variant="contained"
+                sx={{ width: 150, mt: 1, ml: 2 }}
+                onClick={filter}
+              >
+                Filter
+              </Button>
+            )}
+          </Grid>
+        </Grid>
 
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"
-            size={"medium"}
+            size={"small"}
           >
             <EnhancedTableHead rowCount={userExpenses.length} />
             <TableBody>
@@ -359,15 +357,6 @@ export default function EnhancedTable() {
                     key={row.amount}
                     sx={{ cursor: "pointer" }}
                   >
-                    {/* <TableCell padding="checkbox">
-                        <Checkbox
-                          color="primary"
-                          checked={isItemSelected}
-                          inputProps={{
-                            "aria-labelledby": labelId,
-                          }}
-                        />
-                      </TableCell> */}
                     {!edit[expenseId] ? (
                       <>
                         <TableCell
@@ -383,22 +372,18 @@ export default function EnhancedTable() {
                         <TableCell align="left">{row.category}</TableCell>
                         <TableCell align="left">{row.description}</TableCell>
                         <TableCell align="right">
-                          {updateStatus === "loading" ? (
-                            <></>
-                          ) : (
-                            <Button
-                              variant="outlined"
-                              onClick={() => {
-                                setDate(row.date);
-                                setAmount(row.amount);
-                                setDescription(row.description);
-                                setCategory(row.category);
-                                handleEditClick(expenseId);
-                              }}
-                            >
-                              Edit
-                            </Button>
-                          )}
+                          <IconButton
+                            disabled={updateStatus === "loading"}
+                            onClick={() => {
+                              setDate(row.date);
+                              setAmount(row.amount);
+                              setDescription(row.description);
+                              setCategory(row.category);
+                              handleEditClick(expenseId);
+                            }}
+                          >
+                            <EditIcon />
+                          </IconButton>
                         </TableCell>
                       </>
                     ) : (
@@ -445,18 +430,16 @@ export default function EnhancedTable() {
                         </TableCell>
 
                         <TableCell align="right">
-                          <Button
-                            variant="contained"
-                            onClick={() => handleUpdate()}
+                          <IconButton
+                            onClick={() => {
+                              handleUpdate();
+                            }}
                           >
-                            Update
-                          </Button>
-                          <Button
-                            variant="contained"
-                            onClick={() => handleDelete()}
-                          >
-                            Delete
-                          </Button>
+                            <UpdateIcon />
+                          </IconButton>
+                          <IconButton onClick={() => handleDelete()}>
+                            <DeleteIcon />
+                          </IconButton>
                         </TableCell>
                       </>
                     )}
@@ -467,11 +450,6 @@ export default function EnhancedTable() {
           </Table>
         </TableContainer>
       </Paper>
-
-      {/* <FormControlLabel
-        control={<Switch checked={dense} onChange={handleChangeDense} />}
-        label="Dense padding"
-      /> */}
     </Box>
   );
 }

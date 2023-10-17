@@ -148,27 +148,26 @@ export const expensesSlice = createSlice({
       state.filteredList = filteredExpenses;
     },
     filterExpenses: (state, action) => {
+      state.filteredList = [];
       const filteredData = action.payload.filters.map((filter) => {
         return state.unfilteredList.filter((element) => {
           return element.category === filter;
         });
       });
 
-      state.filteredList = [].concat(...filteredData); // Merge arrays using concat
+      var sortedExpenses = [].concat(...filteredData); // Merge arrays using concat
 
-      const sortedExpenses = state.filteredList.sort((a, b) => {
+      sortedExpenses = sortedExpenses.sort((a, b) => {
         const dateA = new Date(a.date);
         const dateB = new Date(b.date);
 
         return dateB - dateA;
       });
 
-      state.filteredList = sortedExpenses;
-
       const startDate = new Date(state.startDate);
       const endDate = new Date(state.endDate);
       // Filter expenses based on the date range
-      const filteredExpenses = state.filteredList.filter((expense) => {
+      const filteredExpenses = sortedExpenses.filter((expense) => {
         const expenseDate = new Date(expense.date);
         return startDate <= expenseDate && expenseDate <= endDate;
       });
@@ -208,7 +207,7 @@ export const expensesSlice = createSlice({
       .addCase(getExpenses.fulfilled, (state, action) => {
         state.getStatus = "succeded";
         state.unfilteredList = action.payload;
-        state.filteredList = action.payload;
+        state.filteredList = state.unfilteredList;
       })
       .addCase(getExpenses.rejected, (state, action) => {
         state.getStatus = "failed";

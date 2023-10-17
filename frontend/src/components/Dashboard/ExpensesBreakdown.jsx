@@ -49,7 +49,7 @@ export default function ExpensesBreakdown() {
       data.push({ id: index, value: updatedBreakdown[key], label: key });
       index += 1;
     }
-    console.log(data);
+
     setBreakdown(data);
   }
 
@@ -59,19 +59,15 @@ export default function ExpensesBreakdown() {
   }, [getStatus]);
 
   return (
-    <Stack direction={"row"}>
+    <>
       <PieChart
         series={[
           {
             data: breakdown,
           },
         ]}
-        width={400}
-        height={200}
+        height={300}
       />
-      <Typography variant="h7" sx={{ my: "10%" }}>
-        Expense Breakdown
-      </Typography>
-    </Stack>
+    </>
   );
 }

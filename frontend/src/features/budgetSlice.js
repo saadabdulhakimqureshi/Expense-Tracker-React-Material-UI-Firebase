@@ -16,7 +16,7 @@ const budgetCollectionRef = collection(firestore, "budget");
 
 // Firebase calls
 export const updateBudget = createAsyncThunk(
-  "income/add",
+  "budgets/add",
   async (post, { getState, dispatch }) => {
     try {
       const snapShot = await getDocs(budgetCollectionRef);
@@ -27,13 +27,18 @@ export const updateBudget = createAsyncThunk(
 
       var update = false;
       var userDoc;
-      result = result.filter((expense) => expense.uid == uid);
-      for (const document in result) {
-        if (document.category == category) {
-          userDoc = doc(firestore, "budget", document.id);
-          update = true;
-        }
+
+      result = result.filter(
+        (expense) =>
+          expense.uid == post.uid && expense.category == post.category
+      );
+      if (result.length > 0) {
+        var document = result[0];
+        userDoc = doc(firestore, "budget", document.id);
+        update = true;
       }
+      console.log(result);
+
       if (update == false) {
         result = await addDoc(budgetCollectionRef, post);
       } else {
@@ -47,19 +52,39 @@ export const updateBudget = createAsyncThunk(
   }
 );
 
+export const getBudgets = createAsyncThunk(
+  "budgets/get",
+  async (uid, { getState, dispatch }) => {
+    try {
+      const snapShot = await getDocs(budgetCollectionRef);
+      var result = snapShot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+
+      result = result.filter((expense) => expense.uid == uid);
+
+      return result;
+    } catch (e) {
+      console.log(e.message);
+      throw e.message;
+    }
+  }
+);
+
 const initialState = {
   addStatus: "idle",
   getStatus: "idle",
   updateStatus: "idle",
-  income: [],
-  budget: [],
+  incomes: [],
+  budgets: [],
   startDate: "",
   endDate: "",
   error: "",
   firstLoad: false,
 };
 
-export const trackingSlice = createSlice({
+export const budgetSlice = createSlice({
   name: "expenses",
   initialState,
   reducers: {
@@ -84,9 +109,20 @@ export const trackingSlice = createSlice({
       .addCase(updateBudget.rejected, (state, action) => {
         state.updateStatus = "failed";
         state.error = "Could not add expense, try again later!";
+      })
+      .addCase(getBudgets.pending, (state, action) => {
+        state.getStatus = "loading";
+      })
+      .addCase(getBudgets.fulfilled, (state, action) => {
+        state.getStatus = "succeded";
+        state.budgets = action.payload;
+      })
+      .addCase(getBudgets.rejected, (state, action) => {
+        state.getStatus = "failed";
+        state.error = "Could not get budgets, try again later!";
       });
   },
 });
 
-export const { reset } = trackingSlice.actions;
-export default trackingSlice.reducer;
+export const { reset } = budgetSlice.actions;
+export default budgetSlice.reducer;

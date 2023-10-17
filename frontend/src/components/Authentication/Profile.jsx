@@ -53,7 +53,7 @@ export default function Profile() {
   };
 
   const [nameError, setNameError] = useState(false);
-  const [emailError, setEmailError] = useState(false);
+  const [oldPasswordError, setOldPasswordError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
 
   // Redux
@@ -94,11 +94,12 @@ export default function Profile() {
   const validationCheck = () => {
     setNameError(false);
     setPasswordError(false);
+    setOldPasswordError(false);
     var check = true;
 
     if (
       nameRef.current.value == "" &&
-      emailRef.current.value == "" &&
+      oldPasswordRef.current.value == "" &&
       passwordRef.current.value == ""
     ) {
       check = false;
@@ -114,8 +115,9 @@ export default function Profile() {
       }
     }
 
-    if (passwordRef.current.value != "") {
+    if (passwordRef.current.value != "" || oldPasswordRef.current.value != "") {
       if (oldPasswordRef.current.value.length < 6) {
+        setOldPasswordError(true);
         check = false;
       }
       if (passwordRef.current.value.length < 6) {
@@ -249,6 +251,7 @@ export default function Profile() {
               id="password"
               fullWidth
               inputRef={oldPasswordRef}
+              error={oldPasswordError}
               helperText="Please write your old password before changing."
               InputProps={{
                 startAdornment: (

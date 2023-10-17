@@ -1,6 +1,9 @@
 import React, { useEffect } from "react";
 import { useState, useRef } from "react";
 
+// Components
+import CategoryBudgets from "./CategoryBudgetsAndTotal";
+
 // MUI3
 import {
   Alert,
@@ -60,7 +63,7 @@ export default function AddExpenseForm() {
   useEffect(() => {
     if (status == "succeded") {
       amountRef.current.value = "";
-      dateRef.current.value = null;
+      // dateRef.current.value = null;
       descriptionRef.current.value = "";
 
       setTimeout(() => {
@@ -101,6 +104,13 @@ export default function AddExpenseForm() {
 
     return check;
   };
+  const getCurrentDate = () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const day = String(now.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
 
   return (
     <>
@@ -114,6 +124,22 @@ export default function AddExpenseForm() {
           <></>
         )}
       </Box>
+      <Stack direction={"column"} sx={{ mt: "1px" }}>
+        <TextField
+          name="description"
+          label="Description"
+          required
+          disabled={status === "loading"}
+          inputRef={descriptionRef}
+          InputProps={{
+            startAdornment: <InputAdornment position="start"></InputAdornment>,
+          }}
+          inputProps={{ maxLength: 30 }}
+          error={descriptionError}
+          helperText={descriptionError ? "Please describe expense." : ""}
+          sx={{ mt: 1 }}
+        />
+      </Stack>
       <Stack direction={"row"}>
         <TextField
           name="amount"
@@ -135,6 +161,7 @@ export default function AddExpenseForm() {
           label="Date"
           inputRef={dateRef}
           disabled={status === "loading"}
+          defaultValue={getCurrentDate()}
           required
           InputProps={{
             startAdornment: <InputAdornment position="start"></InputAdornment>,
@@ -165,22 +192,7 @@ export default function AddExpenseForm() {
           <MenuItem value="Other">Other</MenuItem>
         </TextField>
       </Stack>
-      <Stack direction={"column"} sx={{ mt: "1px" }}>
-        <TextField
-          name="description"
-          label="Description"
-          required
-          disabled={status === "loading"}
-          inputRef={descriptionRef}
-          InputProps={{
-            startAdornment: <InputAdornment position="start"></InputAdornment>,
-          }}
-          inputProps={{ maxLength: 30 }}
-          error={descriptionError}
-          helperText={descriptionError ? "Please describe expense." : ""}
-          sx={{ mt: 1 }}
-        />
-
+      <Stack direction={"column"} sx={{ mt: "4%" }}>
         <Box sx={{ mt: 1, display: "flex", justifyContent: "flex-end" }}>
           {status == "loading" ? (
             <CircularProgress size={"2rem"} />

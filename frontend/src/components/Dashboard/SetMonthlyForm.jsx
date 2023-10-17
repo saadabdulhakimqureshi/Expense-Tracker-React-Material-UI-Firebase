@@ -20,7 +20,8 @@ import {
 
 // ReduxToolkit
 import { useSelector, useDispatch } from "react-redux";
-import { updateBudget, reset } from "../../features/trackingSlice";
+import { updateBudget } from "../../features/budgetSlice";
+import { updateincome } from "../../features/incomeSlice";
 
 export default function SetMonthlyForm() {
   // Refs
@@ -37,10 +38,24 @@ export default function SetMonthlyForm() {
   const [budgetCategoryError, setBudgetCategoryError] = useState(false);
 
   // React-Redux
-  const status = useSelector((state) => state.expenses.addStatus);
+  const budgetStatus = useSelector((state) => state.budget.updateStatus);
+  const incomeStatus = useSelector((state) => state.income.updateStatus);
   const user = useSelector((state) => state.auth.currentUser);
 
   const dispatch = useDispatch();
+
+  const handleUpdateIncome = () => {
+    if (validationCheckIncome()) {
+      dispatch(
+        updateincome({
+          income: income.current.value,
+          month: incomeMonth.current.value,
+          year: new Date().getFullYear(),
+          uid: user.uid,
+        })
+      );
+    }
+  };
 
   const handleUpdateBudget = () => {
     if (validationCheckBudget()) {
@@ -48,6 +63,7 @@ export default function SetMonthlyForm() {
         updateBudget({
           budget: budget.current.value,
           category: budgetCategory.current.value,
+
           uid: user.uid,
         })
       );
@@ -76,6 +92,28 @@ export default function SetMonthlyForm() {
     return check;
   };
 
+  const validationCheckIncome = () => {
+    setIncomeError(false);
+    setIncomeMonthError(false);
+
+    var check = true;
+    if (income.current.value == "") {
+      setIncomeError(true);
+      check = false;
+    }
+
+    if (
+      incomeMonth.current.value === "" ||
+      isNaN(incomeMonth.current.value) ||
+      incomeMonth.current.value < 1 ||
+      incomeMonth.current.value > 12
+    ) {
+      setIncomeMonthError(true);
+      check = false;
+    }
+    return check;
+  };
+
   return (
     <>
       <Typography variant="h5">Expenses Tracking</Typography>
@@ -85,6 +123,7 @@ export default function SetMonthlyForm() {
           type="number"
           required
           error={incomeError}
+          disabled={incomeStatus === "loading"}
           helperText={incomeError ? "Please specify income." : ""}
           inputRef={income}
           //   disabled={status === "loading"}
@@ -100,9 +139,9 @@ export default function SetMonthlyForm() {
           select
           required
           inputRef={incomeMonth}
-          disabled={status === "loading"}
+          disabled={incomeStatus === "loading"}
           error={incomeMonthError}
-          helperText={incomeMonthError ? "Please specify budget category." : ""}
+          helperText={incomeMonthError ? "Please specify income month." : ""}
           //   inputRef={categoryRef}
           //   error={categoryError}
           //   helperText={categoryError ? "Please specify category." : ""}
@@ -124,10 +163,14 @@ export default function SetMonthlyForm() {
         </TextField>
       </Stack>
       <Box sx={{ mt: 1, display: "flex", justifyContent: "flex-end" }}>
-        {status == "loading" ? (
+        {incomeStatus == "loading" ? (
           <CircularProgress size={"2rem"} />
         ) : (
-          <Button variant="contained" color="primary">
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleUpdateIncome}
+          >
             Update
           </Button>
         )}
@@ -139,7 +182,8 @@ export default function SetMonthlyForm() {
           required
           inputRef={budget}
           error={budgetError}
-          helperText={budgetError ? "Please specify budget category." : ""}
+          helperText={budgetError ? "Please specify budget." : ""}
+          disabled={budgetStatus === "loading"}
           //   disabled={status === "loading"}
           InputProps={{
             startAdornment: <InputAdornment position="start">$</InputAdornment>,
@@ -157,7 +201,7 @@ export default function SetMonthlyForm() {
           helperText={
             budgetCategoryError ? "Please specify budget category." : ""
           }
-          disabled={status === "loading"}
+          disabled={budgetStatus === "loading"}
           //   inputRef={categoryRef}
           //   error={categoryError}
           //   helperText={categoryError ? "Please specify category." : ""}
@@ -172,7 +216,7 @@ export default function SetMonthlyForm() {
         </TextField>
       </Stack>
       <Box sx={{ mt: 1, display: "flex", justifyContent: "flex-end" }}>
-        {status == "loading" ? (
+        {budgetStatus == "loading" ? (
           <CircularProgress size={"2rem"} />
         ) : (
           <Button
