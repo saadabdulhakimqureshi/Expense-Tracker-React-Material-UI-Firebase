@@ -16,7 +16,8 @@ a user-friendly interface for users to record, categorize, and analyze their exp
 
 ## Demo
 
-
+![Sign In](./images/sign-in.png)
+![Sign Out](./images/sign-out.png)
 
 ## Features
 
