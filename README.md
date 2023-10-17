@@ -20,52 +20,52 @@ a user-friendly interface for users to record, categorize, and analyze their exp
 
 ## Features
 
-###User Authentication
+### User Authentication
 
-User Registration: Users should be able to create an account by providing their
+#### User Registration: Users should be able to create an account by providing their
 email address and password.
 
-User Login: Registered users should be able to log in securely using their email
+#### User Login: Registered users should be able to log in securely using their email
 and password.
 
-Password Reset: Users should have the option to reset their password via email
+#### Password Reset: Users should have the option to reset their password via email
 if they forget it.
 
-###Expense Management
+### Expense Management
 
 Add Expenses: Users can manually add new expenses, specifying the date,
 amount, category, and a brief description.
 
-Edit Expenses: Users can edit or delete previously entered expenses.
+#### Edit Expenses: Users can edit or delete previously entered expenses.
 
-Expense Categories: Users can categorize expenses into predefined categories
+#### Expense Categories: Users can categorize expenses into predefined categories
 (e.g., groceries, transportation, entertainment).
 
-Expense Filters: Users can filter and view expenses based on date range and
+#### Expense Filters: Users can filter and view expenses based on date range and
 categories.
 
-Expense Summary: Users can view a summary of their total expenses for a
+#### Expense Summary: Users can view a summary of their total expenses for a
 selected date range and see category-wise spending breakdown.
 
-###Budget Tracking
+### Budget Tracking
 
-Set Budgets: Users can set monthly or weekly budgets for different expense
+#### Set Budgets: Users can set monthly or weekly budgets for different expense
 categories.
 
-Budget Notifications: Users should receive notifications or alerts when they
+#### Budget Notifications: Users should receive notifications or alerts when they
 exceed their budget for a specific category.
 
-###Reports and Analytics
+### Reports and Analytics
 
-Expense Trends: Users can view graphical representations (e.g., charts) of their
+#### Expense Trends: Users can view graphical representations (e.g., charts) of their
 expense trends over time.
 
-Income Tracking: Users can track their income and view their income versus
+#### Income Tracking: Users can track their income and view their income versus
 expenses.
 
-###User Profile
+### User Profile
 
-User Profile Page: Users can update their personal information, change their
+#### User Profile Page: Users can update their personal information, change their
 password, and manage their account settings.
 
 Logout: Users should be able to log out securely.
