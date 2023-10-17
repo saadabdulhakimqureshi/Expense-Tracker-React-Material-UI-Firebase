@@ -1,9 +1,11 @@
 # React-Expense-App
  
-The Personal Expense Tracker App is a web application built using the React JavaScript
+The Personal Expense Tracker App is a web application built using the React JavaScript frontend
 library. The primary goal of this app is to help users manage and track their personal
 expenses, enabling them to gain better control over their finances. The app will provide
 a user-friendly interface for users to record, categorize, and analyze their expenses.
+
+The app uses material-ui for styling, firebase for authentication and firestore for data management.
 
 ## Table of Contents
 
